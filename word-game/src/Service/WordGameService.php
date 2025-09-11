@@ -14,10 +14,13 @@ final class WordGameService
 
     public function analyze(string $normalized): array
     {
-        $isPal = $this->isPalindrome($normalized);
+        $isPal    = $this->isPalindrome($normalized);
         $isAlmost = !$isPal && $this->isAlmostPalindrome($normalized);
 
+        // broj unikatnih slova
         $uniqueLetters = strlen(count_chars($normalized, 3));
+
+        // bodovanje: +3 za palindrome, +2 za almost-palindrome
         $score = $uniqueLetters + ($isPal ? 3 : 0) + ($isAlmost ? 2 : 0);
 
         return [
@@ -48,9 +51,10 @@ final class WordGameService
         $i = 0; $j = $n - 1;
         while ($i < $j) {
             if ($w[$i] === $w[$j]) { $i++; $j--; continue; }
+            // skini jedan znak lijevo ili desno pa provjeri
             return $this->isPalindromeRange($w, $i + 1, $j) || $this->isPalindromeRange($w, $i, $j - 1);
         }
-        return false; // ako je već palindrom, almost = false
+        return false; // već je palindrom => almost=false
     }
 
     private function isPalindromeRange(string $w, int $i, int $j): bool
