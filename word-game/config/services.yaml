@@ -1,0 +1,25 @@
+parameters:
+    app.dictionary_path: '%env(resolve:DICTIONARY_PATH)%'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    # automatski registruj sve klase iz src/
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    # controllers kao servisi (potrebno za argumente u akcijama)
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: ['controller.service_arguments']
+
+    # proslijedi putanju u naš DictionaryService
+    App\Service\DictionaryService:
+        arguments:
+            $dictionaryPath: '%app.dictionary_path%'
