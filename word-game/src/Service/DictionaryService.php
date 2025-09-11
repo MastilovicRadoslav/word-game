@@ -25,4 +25,10 @@ final class DictionaryService
     {
         return isset($this->words[strtolower($word)]);
     }
+
+    // alias koji koristiš u kontroleru/testovima
+    public function exists(string $word): bool
+    {
+        return $this->isValidWord($word);
+    }
 }
