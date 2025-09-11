@@ -14,22 +14,36 @@ final class WordApiController
     #[Route('/api/words/score', name: 'api_words_score', methods: ['POST'])]
     public function score(Request $request, DictionaryService $dict, WordGameService $game): JsonResponse
     {
-        $payload = json_decode((string) $request->getContent(), true);
-        $input = (string) ($payload['word'] ?? '');
-        $normalized = $game->normalize($input);
-
-        if ($normalized === '') {
-            return new JsonResponse(['error' => 'Invalid input: use letters A-Z only.'], 400);
+        // 1) Parsiranje JSON-a
+        try {
+            $payload = $request->toArray();
+        } catch (\Throwable) {
+            return new JsonResponse(['error' => 'Invalid JSON body.'], 400);
         }
-        if (!$dict->isValidWord($normalized)) {
+
+        // 2) Polje "word"
+        $raw = $payload['word'] ?? null;
+        if (!$raw || !\is_string($raw)) {
+            return new JsonResponse(['error' => 'Missing "word".'], 400);
+        }
+
+        // 3) Normalizacija + regex validacija
+        $word = strtolower(trim($raw));
+        if (!preg_match('/^[a-z]+$/', $word)) {
+            return new JsonResponse(['error' => 'Only letters a-z allowed.'], 400);
+        }
+
+        // 4) Rječnik => 422
+        if (!$dict->exists($word)) {
             return new JsonResponse(['error' => 'Word is not in the English dictionary.'], 422);
         }
 
-        $analysis = $game->analyze($normalized);
+        // 5) Analiza
+        $analysis = $game->analyze($word);
 
         return new JsonResponse([
-            'word'                => $input,
-            'normalized'          => $normalized,
+            'word'                => $raw,
+            'normalized'          => $word,
             'uniqueLetters'       => $analysis['uniqueLetters'],
             'isPalindrome'        => $analysis['isPalindrome'],
             'isAlmostPalindrome'  => $analysis['isAlmostPalindrome'],
