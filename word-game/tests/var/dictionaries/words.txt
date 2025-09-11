@@ -1,0 +1,10 @@
+level
+hello
+world
+kayak
+deed
+civic
+lever
+pearl
+river
+radar
