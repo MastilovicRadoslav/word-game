@@ -1,0 +1,9 @@
+body { margin: 0; }
+.row-highlight {
+  animation: pulse 1.2s ease-in-out 1;
+  background: #fffbe6 !important; /* AntD table row highlight */
+}
+@keyframes pulse {
+  0% { background: #fff1b8; }
+  100% { background: #fffbe6; }
+}
