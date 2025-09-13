@@ -99,20 +99,61 @@ Frontend will run on [http://localhost:5173](http://localhost:5173) and connect 
 
 ## 🧪 Testing
 
-### Functional tests
+The project comes with **three levels of testing**:
+
+### 1. Functional tests (REST API)
+Located in `tests/Functional/WordApiTest.php`.  
+They send real HTTP requests to the API and check the responses.
+
+Run:
 ```bash
 php bin/phpunit --testsuite functional
 ```
 
-### Unit tests
+Example checks:
+- ✅ Valid palindrome (`level`) returns `200` with correct score.  
+- ✅ Almost palindrome (`abca`) returns `200` with correct flags.  
+- ✅ Word not in dictionary returns `422`.  
+- ✅ Invalid characters or empty input returns `400`.  
+
+### 2. Unit tests (services)
+Located in `tests/Unit/DictionaryServiceTest.php` and `tests/Unit/WordGameServiceTest.php`.  
+They test dictionary loading, normalization, palindrome logic, scoring.
+
+Run:
 ```bash
 php bin/phpunit --testsuite unit
 ```
 
-### Console command
+Example checks:
+- `normalize("He!!o-World") === "heoworld"`  
+- `isPalindrome("racecar") === true`  
+- `isAlmostPalindrome("abca") === true`  
+- Correct calculation of score for different words.  
+
+### 3. Console command tests
+Located in `tests/Console/ScoreWordCommandTest.php`.  
+They simulate running `php bin/console app:score-word` with different inputs.
+
+Run all tests:
+```bash
+php bin/phpunit
+```
+
+### 4. Manual console testing
+You can also try directly in the terminal:
+
 ```bash
 php bin/console app:score-word level
+php bin/console app:score-word abca --json
+php bin/console app:score-word unknown
+php bin/console app:score-word he!!o
 ```
+
+Expected:
+- Valid words print success + score.  
+- Invalid words return error/warning and exit code `2`.  
+- Option `--json` outputs machine-readable JSON.  
 
 ---
 
