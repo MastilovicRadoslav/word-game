@@ -1,11 +1,9 @@
 // src/services/wordApi.js
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-const API = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'
-
 export const wordApi = createApi({
   reducerPath: 'wordApi',
-  baseQuery: fetchBaseQuery({ baseUrl: API }),
+  baseQuery: fetchBaseQuery({ baseUrl: '/' }),
   endpoints: (builder) => ({
     scoreWord: builder.mutation({
       query: (word) => ({

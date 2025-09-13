@@ -20,11 +20,11 @@ export default function WordForm() {
     try {
       const res = await scoreWord(word).unwrap()
       dispatch(addWord({ ...res, id: makeId(), addedAt: Date.now() }))
-      message.success(`Dodano: "${res.normalized}" (score ${res.score})`)
+      alert(`Dodano: "${res.normalized}" (score ${res.score})`)
       form.resetFields()
     } catch (err) {
       const msg = err?.data?.error ?? 'Greška pri pozivu API-ja.'
-      message.error(msg)
+      alert(msg)
     }
   }
 

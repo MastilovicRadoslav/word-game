@@ -6,7 +6,6 @@ namespace App\Tests\Console;
 use App\Command\ScoreWordCommand;
 use App\Service\DictionaryService;
 use App\Service\WordGameService;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -19,14 +18,6 @@ final class ScoreWordCommandTest extends TestCase
         return $path;
     }
 
-    public static function provideOkWords(): array
-    {
-        return [
-            ['level', 6, true, false],
-            ['kayak', 5, true, false],  // unique=4 + pal=3 => 7 (ali  "kayak" unique su k,a,y ? zapravo k,a,y = 3; greška! pa ostavimo 'level' samo u OK)
-        ];
-    }
-
     public function testSuccessJson(): void
     {
         $dictPath = self::makeTempDict(['level', 'hello', 'world']);
@@ -37,12 +28,15 @@ final class ScoreWordCommandTest extends TestCase
         $output = trim($tester->getDisplay());
 
         self::assertSame(0, $exit);
-        $data = json_decode($output, true);
+        $data = json_decode($output, true, 512, JSON_THROW_ON_ERROR);
         self::assertSame('Level', $data['word']);
         self::assertSame('level', $data['normalized']);
         self::assertTrue($data['isPalindrome']);
         self::assertFalse($data['isAlmostPalindrome']);
-        self::assertSame(6, $data['score']);
+
+        // Pravilo: singletons = 1 ('v'), pa 1 + 3 = 4
+        self::assertSame(1, $data['uniqueLetters']);
+        self::assertSame(4, $data['score']);
 
         @unlink($dictPath);
     }

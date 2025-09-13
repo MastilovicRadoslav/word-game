@@ -39,8 +39,14 @@ final class WordGameServiceTest extends TestCase
         return [
             ['level', true],
             ['civic', true],
+            ['noon', true],
+            ['madam', true],
+            ['refer', true],
+            ['rotor', true],
+            ['stats', true],
+            ['wow', true],
             ['a', true],
-            ['', false],     // po našoj implementaciji prazan string NIJE palindrom
+            ['', false],
             ['ab', false],
             ['hello', false],
         ];
@@ -73,10 +79,46 @@ final class WordGameServiceTest extends TestCase
 
     public function testAnalyze(): void
     {
+        // level: l(2), e(2), v(1) => singletons=1; pal=true => 1+3=4
         $r = $this->svc->analyze('level');
-        self::assertSame(3, $r['uniqueLetters']); // l,e,v
+        self::assertSame(1, $r['uniqueLetters']);
         self::assertTrue($r['isPalindrome']);
         self::assertFalse($r['isAlmostPalindrome']);
-        self::assertSame(6, $r['score']); // 3 + 3
+        self::assertSame(4, $r['score']);
+    }
+
+    public function testAnalyzeExamples(): void
+    {
+        // kayak: k(2), a(2), y(1) => 1 + 3 = 4
+        $r = $this->svc->analyze('kayak');
+        self::assertSame(1, $r['uniqueLetters']);
+        self::assertTrue($r['isPalindrome']);
+        self::assertSame(4, $r['score']);
+
+        // deed: d(2), e(2) => 0 + 3 = 3
+        $r = $this->svc->analyze('deed');
+        self::assertSame(0, $r['uniqueLetters']);
+        self::assertTrue($r['isPalindrome']);
+        self::assertSame(3, $r['score']);
+
+        // abca: a(2), b(1), c(1) => 2 + 2 = 4
+        $r = $this->svc->analyze('abca');
+        self::assertSame(2, $r['uniqueLetters']);
+        self::assertFalse($r['isPalindrome']);
+        self::assertTrue($r['isAlmostPalindrome']);
+        self::assertSame(4, $r['score']);
+
+        // racecar: r(2), a(2), c(2), e(1) => 1 + 3 = 4
+        $r = $this->svc->analyze('racecar');
+        self::assertSame(1, $r['uniqueLetters']);
+        self::assertTrue($r['isPalindrome']);
+        self::assertSame(4, $r['score']);
+
+        // hello: h(1), e(1), l(2), o(1) => 3 + 0 = 3
+        $r = $this->svc->analyze('hello');
+        self::assertSame(3, $r['uniqueLetters']);
+        self::assertFalse($r['isPalindrome']);
+        self::assertFalse($r['isAlmostPalindrome']);
+        self::assertSame(3, $r['score']);
     }
 }

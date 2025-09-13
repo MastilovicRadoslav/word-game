@@ -21,7 +21,7 @@ final class WordApiTest extends WebTestCase
         // Test rječnik (stalno ga prepiši da test bude determinističan)
         $words = [
             'level', 'hello', 'world', 'kayak', 'deed', 'civic', 'lever', 'pearl', 'river', 'radar',
-            'racecar', 'racecars', 'abca' // dodano radi testova
+            'racecar', 'racecars', 'abca', 'noon','madam','refer','rotor','stats','wow' // dodano radi testova
         ];
         file_put_contents($dictionary, implode("\n", $words) . "\n");
     }
@@ -33,6 +33,9 @@ final class WordApiTest extends WebTestCase
             // palindrome
             ['level',    true,  false, 200],
             ['Racecar',  true,  false, 200],
+            ['noon',   true,  false, 200],
+            ['madam',  true,  false, 200],
+            ['refer',  true,  false, 200],
             // almost-palindrome: ukloni 1 znak pa bude palindrome
             ['abca',     false, true,  200], // remove 'b' -> 'aca'
             ['racecars', false, true,  200], // remove 's' -> 'racecar'
@@ -63,6 +66,16 @@ final class WordApiTest extends WebTestCase
             $this->assertSame($pal, $data['isPalindrome']);
             $this->assertSame($almost, $data['isAlmostPalindrome']);
             $this->assertArrayHasKey('score', $data);
+
+            if (strtolower($word) === 'racecar') {
+                self::assertSame(1, $data['uniqueLetters']); // samo 'e'
+                self::assertSame(4, $data['score']);
+            }
+
+            if (strtolower($word) === 'abca') {
+                self::assertSame(2, $data['uniqueLetters']); // b, c
+                self::assertSame(4, $data['score']);
+            }
         }
     }
 }

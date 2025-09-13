@@ -42,5 +42,11 @@ export default wordsSlice.reducer
 
 // SELECTORS
 export const selectWordsSlice = (state) => state.words
-export const selectSortedWords = (state) =>
-  [...state.words.items].sort((a, b) => b.score - a.score)
+
+// ✅ memoizirano: vraća stabilnu referencu dok se items ne promijeni
+import { createSelector } from '@reduxjs/toolkit'
+export const selectSortedWords = createSelector(
+  (state) => state.words.items,
+  (items) => [...items].sort((a, b) => b.score - a.score)
+)
+

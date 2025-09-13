@@ -1,42 +1,155 @@
-#root {
-  max-width: 1280px;
+:root {
+  --bg: #f7f9fc;
+  --card-bg: #fff;
+  --border: #f0f0f0;
+}
+
+/* Global layout */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: rgba(0, 0, 0, 0.88);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.site-layout {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+/* Header */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #fff !important;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  padding: 0 24px;
+}
+
+.header-inner {
+  max-width: 960px;
   margin: 0 auto;
-  padding: 2rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.subtitle {
+  margin-left: 8px;
+}
+
+/* Content */
+.site-content {
+  padding: 24px;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  display: grid;
+  gap: 16px;
+}
+
+/* Cards */
+.card-block {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+}
+
+/* List section */
+.list-header {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.list-body {
+  padding: 16px;
+}
+
+/* Footer */
+.site-footer {
+  text-align: center;
+  background: transparent;
+  padding: 24px;
+  border-top: 1px solid var(--border);
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .header-inner { height: 56px; }
+  .site-content { padding: 16px; }
+  .container { gap: 12px; }
+}
+
+/* tabela */
+.ant-table {
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* header */
+.ant-table-thead > tr > th {
+  background: #fafafa !important;
+  font-weight: 600;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* centriraj male kolone */
+.ant-table-cell:nth-child(1),
+.ant-table-cell:nth-child(4),
+.ant-table-cell:nth-child(5),
+.ant-table-cell:nth-child(6),
+.ant-table-cell:nth-child(7) {
+  text-align: center;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+/* highlight za novu riječ */
+.row-highlight {
+  background-color: #e6f7ff !important; /* svijetlo plava */
+  transition: background-color 0.5s ease;
+}
+
+/* dugmad */
+.ant-btn-dangerous {
+  font-size: 12px;
+}
+
+/* WordForm look & feel */
+.form-wrap {
+  width: 100%;
+}
+
+.word-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;            /* red/kolona razmak */
+}
+
+.word-form .ant-form-item {
+  margin-bottom: 0;         /* kompaktno */
+}
+
+.form-hint {
+  opacity: 0.7;
+  font-size: 12px;
+}
+
+/* Na manjim ekranima formu raširi 100% */
+@media (max-width: 576px) {
+  .word-form .ant-input,
+  .word-form .ant-input-affix-wrapper,
+  .word-form .ant-form-item-control-input,
+  .word-form .ant-form-item-control-input-content {
+    width: 100%;
   }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }

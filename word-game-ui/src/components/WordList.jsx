@@ -13,7 +13,7 @@ export default function WordList() {
     { title: 'Word', dataIndex: 'word' },
     { title: 'Normalized', dataIndex: 'normalized' },
     { title: 'Unique', dataIndex: 'uniqueLetters', width: 90 },
-    { title: 'Pal', dataIndex: 'isPalindrome', render: (v) => v ? <Tag>palindrome</Tag> : '-' },
+    { title: 'Palindrom', dataIndex: 'isPalindrome', render: (v) => v ? <Tag>palindrome</Tag> : '-' },
     { title: 'Almost', dataIndex: 'isAlmostPalindrome', render: (v) => v ? <Tag color="processing">almost</Tag> : '-' },
     {
       title: 'Score',

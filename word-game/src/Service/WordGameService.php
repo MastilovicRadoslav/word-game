@@ -17,19 +17,25 @@ final class WordGameService
         $isPal    = $this->isPalindrome($normalized);
         $isAlmost = !$isPal && $this->isAlmostPalindrome($normalized);
 
-        // broj unikatnih slova
-        $uniqueLetters = strlen(count_chars($normalized, 3));
+        // broj slova koja se pojavljuju TAČNO jednom
+        $freq = count_chars($normalized, 1); // [ascii => count]
+        $singletons = 0;
+        foreach ($freq as $count) {
+            if ($count === 1) {
+                $singletons++;
+            }
+        }
 
-        // bodovanje: +3 za palindrome, +2 za almost-palindrome
-        $score = $uniqueLetters + ($isPal ? 3 : 0) + ($isAlmost ? 2 : 0);
+        $score = $singletons + ($isPal ? 3 : 0) + ($isAlmost ? 2 : 0);
 
         return [
-            'uniqueLetters'       => $uniqueLetters,
+            'uniqueLetters'       => $singletons,       // sada znači "non-repeating"
             'isPalindrome'        => $isPal,
             'isAlmostPalindrome'  => $isAlmost,
             'score'               => $score,
         ];
     }
+
 
     public function isPalindrome(string $w): bool
     {
