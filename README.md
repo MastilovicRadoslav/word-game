@@ -3,6 +3,8 @@
 This is a full stack coding challenge solution for Company challenge.  
 The project implements a simple **Word Game** application with scoring rules, REST API, tests, and frontend interface.
 
+Demo: https://www.youtube.com/watch?v=LSQMCG-huSM&t=4s
+
 ---
 
 ## 🚀 Tech Stack
