@@ -39,6 +39,40 @@ Only words present in the English dictionary (loaded from `words.txt`) are allow
 
 ---
 
+## 🏃 Sprint Plan
+
+### 🚀 Sprint 1 – Backend REST API (Part 1)
+
+**Cilj:** imati potpuno funkcionalan REST API sa validacijom riječi i scoring logikom.  
+**Zadaci:**
+- Kreirati Symfony skeleton projekat + dodati potrebne pakete.  
+- Implementirati `DictionaryService` (učitavanje engleskog rječnika).  
+- Implementirati `WordGameService` (normalizacija, palindrome, almost-palindrome, scoring).  
+- Napraviti `WordApiController` sa endpointom `/api/words/score`.  
+- Dodati funkcionalne testove za REST API (npr. `tests/Functional/WordApiTest.php`).  
+
+### ⚡ Sprint 2 – Unit testovi + Console app (Part 2)
+
+**Cilj:** pokriti core logiku testovima i imati konzolni command-line način rada.  
+**Zadaci:**
+- Pisanje unit testova za `WordGameService`.  
+- Pisanje unit testova za `DictionaryService`.  
+- Kreirati Symfony konzolnu komandu `app:score-word` koja prima riječ i vraća JSON ili tekstualni rezultat.  
+- Testirati konzolnu komandu.  
+
+### 🌐 Sprint 3 – Frontend (Part 3)
+
+**Cilj:** React + Redux aplikacija povezana sa backendom.  
+**Zadaci:**
+- Postaviti React + Vite projekat sa Redux Toolkit-om.  
+- Napraviti formu za unos riječi.  
+- Povezati formu sa backend API-jem.  
+- Napraviti listu riječi sortiranu po score-u.  
+- Highlight zadnje dodate riječi.  
+- Dodati trajnu pohranu liste (`localStorage` ili `redux-persist`).  
+
+---
+
 ## ⚡ Installation & Run
 
 ### Backend (Symfony)
