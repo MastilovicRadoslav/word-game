@@ -6,8 +6,13 @@ namespace App\Tests\Functional;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+# Testiram pravi HTTP sloj (routing, controller, DI, servisi, JSON).
+# Izoluje se od produkcijskog rječnika pisanjem testnog fajla.
+# Pokriva “sretan put”, greške validacije, i semantičku grešku (422).
 final class WordApiTest extends WebTestCase
 {
+    // Prije sviih testova, ovaj metod kreira/prekuca testni rječnik u var/dictionaries/words.txt.
+    // Time funkcionalni testovi postaju deterministični i ne zavise od “production” words.txt.
     public static function setUpBeforeClass(): void
     {
         // project dir = .../word-game
@@ -26,7 +31,8 @@ final class WordApiTest extends WebTestCase
         file_put_contents($dictionary, implode("\n", $words) . "\n");
     }
 
-
+    // Svaki element je [ulazna riječ, očekivano palindrom?, očekivano almost?, očekivani HTTP status].
+    // Palindromi i almost-palindromi su validni (200), van rječnika je 422, loš format je 400.
     public static function provideWords(): array
     {
         return [
@@ -47,9 +53,12 @@ final class WordApiTest extends WebTestCase
         ];
     }
 
+    // glavni test
     #[DataProvider('provideWords')]
     public function testScore(string $word, bool $pal, bool $almost, int $expectedStatus = 200): void
     {
+
+        // Stvara testni HTTP klijent i šalje stvaran POST na endpoint.
         $client = static::createClient();
         $client->request(
             'POST',
@@ -58,8 +67,13 @@ final class WordApiTest extends WebTestCase
             content: json_encode(['word' => $word], JSON_THROW_ON_ERROR)
         );
 
+        // Verifikuje status (200/422/400).
         $this->assertResponseStatusCodeSame($expectedStatus);
 
+        // Ako je status 200, čita JSON i provjerava:
+        // Normalizacija je lowercase.
+        // Flagovi isPalindrome i isAlmostPalindrome odgovaraju očekivanju.
+        // Polje score postoji
         if ($expectedStatus === 200) {
             $data = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
             $this->assertSame(strtolower($word), $data['normalized']);
@@ -67,6 +81,7 @@ final class WordApiTest extends WebTestCase
             $this->assertSame($almost, $data['isAlmostPalindrome']);
             $this->assertArrayHasKey('score', $data);
 
+            // Specifične provjere za dvije riječi
             if (strtolower($word) === 'racecar') {
                 self::assertSame(1, $data['uniqueLetters']); // samo 'e'
                 self::assertSame(4, $data['score']);

@@ -4,60 +4,66 @@ declare(strict_types=1);
 namespace App\Tests\Unit;
 
 use App\Service\WordGameService;
-use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider; // PHPUnit DataProvider: jedan test se izvršava više puta sa različitim ulazima.
 use PHPUnit\Framework\TestCase;
 
 final class WordGameServiceTest extends TestCase
 {
     private WordGameService $svc;
 
+    //Svaki test dobija novu instancu servisa; Osigurava da testovi ne dijele stanje.
     protected function setUp(): void
     {
         $this->svc = new WordGameService();
     }
 
+    # Provjeravam da normalize()
     public static function provideNormalize(): array
     {
         return [
-            ['Level', 'level'],
-            ['He!!o-World', 'heoworld'],
-            ['  CIVIC  ', 'civic'],
-            ['123abc', 'abc'],
-            ['', ''],
-            ['@@@', ''],
+            ['Level', 'level'], // Pretvara velika slova u mala (Level → level).
+            ['He!!o-World', 'heoworld'], // Uklanja specijalne znakove (He!!o-World → heoworld).
+            ['  CIVIC  ', 'civic'], // Skida whitespace.
+            ['123abc', 'abc'], // Uklanja brojeve.
+            ['', ''], // Vraća prazan string kad nema validnih slova.
+            ['@@@', ''], // Uklanja simbole
         ];
     }
 
-    #[DataProvider('provideNormalize')]
+    #[DataProvider('provideNormalize')] # Za svaku kombinaciju iz metode provideNormalize pozovi testNormalize metod.
     public function testNormalize(string $in, string $expected): void
     {
-        self::assertSame($expected, $this->svc->normalize($in));
+        # PHPUnit automatski uzima parove vrijednosti iz provideNormalize; 
+        # Za svaku kombinaciju poziva ovu test metodu; 
+        # Provjerava da li normalize($in) vraća tačno ono što očekujemo ($expected).
+        self::assertSame($expected, $this->svc->normalize($in)); # assertSame pored vrijednosti poredi i tip (striktno).
     }
 
     public static function providePalindrome(): array
     {
         return [
-            ['level', true],
-            ['civic', true],
+            ['level', true], // Klasični palindromi
+            ['civic', true], 
             ['noon', true],
             ['madam', true],
             ['refer', true],
             ['rotor', true],
             ['stats', true],
             ['wow', true],
-            ['a', true],
-            ['', false],
-            ['ab', false],
-            ['hello', false],
+            ['a', true], // Jednoslovne riječi
+            ['', false], // Prazan string → false
+            ['ab', false], // Nepalindromi -> false
+            ['hello', false], // // Nepalindromi -> false
         ];
     }
 
-    #[DataProvider('providePalindrome')]
+    #[DataProvider('providePalindrome')] # Za svaku kombinaciju iz metode provideNormalize pozovi testNormalize metod.
     public function testIsPalindrome(string $w, bool $isPal): void
     {
         self::assertSame($isPal, $this->svc->isPalindrome($w));
     }
 
+    # Testira isAlmostPalindrome()
     public static function provideAlmost(): array
     {
         return [
@@ -65,9 +71,9 @@ final class WordGameServiceTest extends TestCase
             ['racecars', true], // remove 's' => 'racecar'
             ['abab', true],     // remove 'a' (left) => 'bab'
             ['level', false],   // već palindrom => almost=false
-            ['a', false],
-            ['', false],
-            ['abc', false],
+            ['a', false], // Jednoslovne riječi
+            ['', false], // prazne riječi
+            ['abc', false], // Obična riječ abc → false.
         ];
     }
 
@@ -77,6 +83,7 @@ final class WordGameServiceTest extends TestCase
         self::assertSame($expected, $this->svc->isAlmostPalindrome($w));
     }
 
+    # Ovo testira da se analyze() ponaša u skladu sa pravilima koja су definisana
     public function testAnalyze(): void
     {
         // level: l(2), e(2), v(1) => singletons=1; pal=true => 1+3=4
@@ -87,6 +94,8 @@ final class WordGameServiceTest extends TestCase
         self::assertSame(4, $r['score']);
     }
 
+    # Više različitih riječi (palindromi, almost-palindromi, obične riječi).
+    # Svaka provjera očekivanja (uniqueLetters, palindrome, almost, score).
     public function testAnalyzeExamples(): void
     {
         // kayak: k(2), a(2), y(1) => 1 + 3 = 4

@@ -1,3 +1,4 @@
+# novi parametar u Symfony kontejneru koji se puni iz .env
 parameters:
     app.dictionary_path: '%env(resolve:DICTIONARY_PATH)%'
 
@@ -6,7 +7,7 @@ services:
         autowire: true
         autoconfigure: true
 
-    # automatski registruj sve klase iz src/
+    # automatski registruj sve klase iz src kao servise/
     App\:
         resource: '../src/'
         exclude:
@@ -14,12 +15,12 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    # controllers kao servisi (potrebno za argumente u akcijama)
+    # controllers kao servisi (potrebno za argumente u akcijama, u metodama kontrolera koristimo servise kao argumente)
     App\Controller\:
         resource: '../src/Controller/'
         tags: ['controller.service_arguments']
 
-    # proslijedi putanju u naš DictionaryService
+    # proslijedi putanju u naš DictionaryServic, parametar $dictionaryPath popuni sa %app.dictionary_path%
     App\Service\DictionaryService:
         arguments:
             $dictionaryPath: '%app.dictionary_path%'

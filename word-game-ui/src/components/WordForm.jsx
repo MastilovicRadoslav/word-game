@@ -11,15 +11,15 @@ function makeId() {
 
 export default function WordForm() {
   const [form] = Form.useForm()
-  const [scoreWord, { isLoading }] = useScoreWordMutation()
+  const [scoreWord, { isLoading }] = useScoreWordMutation() // RTK Query mutation hook; scoreWord je funkcija za API poziv; isLoading = true dok traje request. 
   const dispatch = useAppDispatch()
 
   const onFinish = async (values) => {
     const word = values.word?.trim()
     if (!word) return
     try {
-      const res = await scoreWord(word).unwrap()
-      dispatch(addWord({ ...res, id: makeId(), addedAt: Date.now() }))
+      const res = await scoreWord(word).unwrap() // Ako input nije prazan, šalje ga API-ju.
+      dispatch(addWord({ ...res, id: makeId(), addedAt: Date.now() })) // Dodaje riječ u Redux store (addWord) sa generisanim ID-jem i timestamp-om.
       alert(`Dodano: "${res.normalized}" (score ${res.score})`)
       form.resetFields()
     } catch (err) {

@@ -1,13 +1,19 @@
 <?php
-declare(strict_types=1);
+declare(strict_types=1); # strogo provjerava tipove
 
 namespace App\Service;
 
-final class DictionaryService
+
+
+public interface IDictionaryService(){
+    Task<bool> exists(string word);
+}
+
+final class DictionaryService : IDictionaryService()
 {
     /** @var array<string,true> */
     private array $words = [];
-
+    # konstruktor; otvori fajl sa riječima (words.txt); učita svaku liniju; normalizuje u lowercase i ukloni whitespace; Stavi riječ u $this->words kao ključ → O(1) lookup.
     public function __construct(private readonly string $dictionaryPath)
     {
         if (is_file($this->dictionaryPath)) {
@@ -21,14 +27,15 @@ final class DictionaryService
         }
     }
 
-    public function isValidWord(string $word): bool
+    # provjerava postoji li riječ u $this->words (case-insensitive).
+    function isValidWord(string $word): bool
     {
         return isset($this->words[strtolower($word)]);
     }
 
     // alias koji koristiš u kontroleru/testovima
-    public function exists(string $word): bool
+    public override exists(string $word): bool
     {
-        return $this->isValidWord($word);
+        return isValidWord(word);
     }
 }

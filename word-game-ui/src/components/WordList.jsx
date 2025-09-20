@@ -5,8 +5,8 @@ import { clear, selectSortedWords, selectWordsSlice, removeById } from '../featu
 
 export default function WordList() {
   const dispatch = useAppDispatch()
-  const sorted = useAppSelector(selectSortedWords)
-  const { lastAddedId } = useAppSelector(selectWordsSlice)
+  const sorted = useAppSelector(selectSortedWords) // Uzima listu riječi sortiranu po score-u.
+  const { lastAddedId } = useAppSelector(selectWordsSlice) // Pamti lastAddedId za highlight.
 
   const columns = [
     { title: '#', render: (_,_r,i) => i + 1, width: 60 },
